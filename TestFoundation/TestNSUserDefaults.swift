@@ -21,11 +21,13 @@ class TestNSUserDefaults : XCTestCase {
     
     var allTests : [(String, () -> ())] {
         return [
-            ("test", test),
+            ("test_string", test_string),
         ]
     }
     
-    func test() {
-        XCTAssert(true)
+    func test_string() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject("string_value", forKey: "test_string")
+        XCTAssertEqual("test_string", defaults.stringForKey("test_string"))
     }
 }

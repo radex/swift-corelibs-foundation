@@ -7,6 +7,7 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
+import CoreFoundation
 
 public let NSGlobalDomain: String = "" // NSUnimplemented()
 public let NSArgumentDomain: String = "" // NSUnimplemented()
@@ -14,17 +15,21 @@ public let NSRegistrationDomain: String = "" // NSUnimplemented()
 
 public class NSUserDefaults : NSObject {
     
-    public class func standardUserDefaults() -> NSUserDefaults { NSUnimplemented() }
+    public class func standardUserDefaults() -> NSUserDefaults { return NSUserDefaults(suiteName: nil)! }
     public class func resetStandardUserDefaults() { NSUnimplemented() }
     
     public convenience override init() { NSUnimplemented() }
-    public init?(suiteName suitename: String?)  { NSUnimplemented() } //nil suite means use the default search list that +standardUserDefaults uses
+    public init?(suiteName suitename: String?)  { super.init() } //nil suite means use the default search list that +standardUserDefaults uses
     
     public func objectForKey(defaultName: String) -> AnyObject? { NSUnimplemented() }
-    public func setObject(value: AnyObject?, forKey defaultName: String) { NSUnimplemented() }
+    public func setObject(value: AnyObject?, forKey defaultName: String) {
+        CFPreferencesSetAppValue(defaultName._cfObject, value, kCFPreferencesCurrentApplication)
+    }
     public func removeObjectForKey(defaultName: String) { NSUnimplemented() }
     
-    public func stringForKey(defaultName: String) -> String? { NSUnimplemented() }
+    public func stringForKey(defaultName: String) -> String? {
+        CFPreferencesCopyAppValue(defaultName as! CFString, kCFPreferencesCurrentApplication)
+    }
     public func arrayForKey(defaultName: String) -> [AnyObject]? { NSUnimplemented() }
     public func dictionaryForKey(defaultName: String) -> [String : AnyObject]? { NSUnimplemented() }
     public func dataForKey(defaultName: String) -> NSData? { NSUnimplemented() }
